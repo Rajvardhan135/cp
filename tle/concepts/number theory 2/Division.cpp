@@ -13,13 +13,35 @@ void solve() {
 
     if(a % b != 0) cout << a << ln;
     else {
-    	int num = b - (a / b);
-    	if(num <= 0) cout << 1 << ln;
-    	else {
-    		if(num > (a / num) || (a / num) % b == 0) cout << num << ln;
-    		else cout << (a / num) << ln;
-    	}
+        map<int, int> mp;
+        for(int i=2; i*i<=b; i++) {
+            while(b % i == 0) {
+                mp[i]++;
+                b /= i;
+            }
+        }
+        if(b > 1) mp[b] = 1;
+
+        ll ans = 1;
+        for(auto &[prime, nb] : mp) {
+            // cout << prime << " " << nb << ln;
+            ll na = 0;
+            ll t = a;
+            while(t % prime == 0) {
+                t /= prime;
+                na++;
+            }
+
+            int drop = na - nb + 1;
+            if(drop >= 0) {
+                ll num = a / expo(prime, drop, 1e64);
+                if(num > ans) ans = num;
+            }
+            // cout << num << ln;
+        } 
+        cout << (ans) << ln;
     }
+
 }
 
 int main() {
