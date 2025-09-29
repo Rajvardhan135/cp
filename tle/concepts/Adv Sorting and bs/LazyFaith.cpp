@@ -7,54 +7,62 @@ using namespace std;
 #define fastio ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
 void solve() {
-    int s, t, q;
-    cin >> s >> t >> q;
+    int a, b, q;
+    cin >> a >> b >> q;
 
-    vector<int> shrine(s), temple(t);
+    vector<ll> s(a), t(b);
 
-    for(auto &it:shrine) cin >> it;
-    for(auto &it:temple) cin >> it;
+    for(auto &it:s) cin >> it;
+    for(auto &it:t) cin >> it;
+
+    sort(s.begin(), s.end());
+    sort(t.begin(), t.end());
+
 
     for(int i=0; i<q; i++) {
-    	int x;
-    	cin >> x;
-    	int sh = lower_bound(shrine.begin(), shrine.end(), x) - shrine.begin();
-    	
-    	int dist1 = 0, dist2 = 0;
+    	ll x;
+        cin >> x;
+        ll ans = 1e10;
+        int s1 = lower_bound(s.begin(), s.end(), x) - s.begin();
+        int t1 = lower_bound(t.begin(), t.end(), x) - t.begin();
+        vector<ll> temp1, temp2;
 
-    	if(sh == s) dist1 += x - shrine[s-1];
-    	else if(sh == 0) dist1 += shrine[0] - x;
-    	else {
-    		dist1 += min(shrine[sh] - x, x - shrine[sh-1]);
-    	}
+        if(s1 == 0) temp1.push_back(s[s1]);
+        else if(s1 == a) {
+            temp1.push_back(s[a-1]);
+            if(a != n) temp1.push_back(s[a-2]);
+        }
+        else {
+            if(s[s1] == x) temp1.push_back(s[s1]);
+            else {
+                temp1.push_back(s[s1]);
+                temp1.push_back(s[s1-1]);
+            }
+        }
 
-    	int tp = lower_bound(temple.begin(), temple.end(), dist1) - temple.begin();
+        if(t1 == 0) temp2.push_back(t[t1]);
+        else if(t1 == b) temp2.push_back(t[b-1]);
+        else {
+            if(t[t1] == x) temp2.push_back(t[t1]);
+            else {
+                temp2.push_back(t[t1]);
+                temp2.push_back(t[t1-1]);
+            }
+        }
 
-    	// cout << dist1 << " ";
+        for(int i=0; i<temp1.size(); i++) {
+            int dist = temp1[i];
+            int cost = dist;
 
-    	if(tp == t) dist1 += dist1 - temple[t-1];
-    	else if(tp == 0) dist1 += temple[0] - dist1;
-    	else {
-    		dist1 += min(temple[tp] - dist1, dist1 - temple[tp-1]);
-    	}
+            int lb = t.lower_bound(t.begin(), t.end(), dist) - t.begin();
+            if(lb == 0) cost += abs(dist - temp2[lb]);
+            else if(lb == a) cost += min
 
-    	tp = lower_bound(temple.begin(), temple.end(), x) - temple.begin();
-    	if(tp == t) dist2 += x - temple[t-1];
-    	else if(tp == 0) dist2 += temple[0] - x;
-    	else {
-    		dist2 += min(temple[tp] - x, x - temple[tp-1]);
-    	}
+        }
 
-    	sh = lower_bound(shrine.begin(), shrine.end(), dist2) - shrine.begin();
-    	if(sh == s) dist2 += dist2 - shrine[s-1];
-    	else if(sh == 0) dist2 += shrine[0] - dist2;
-    	else {
-    		dist2 += min(shrine[sh] - dist2, dist2 - shrine[sh-1]);
-    	}
-
-    	cout << dist1 << " " << dist2 << ln;
 
     }
+    
 }
 
 int main() {
